@@ -59,6 +59,21 @@ Results exclude fees, funding and slippage. Stops closer than 0.2% to the entry 
 - Every call and event is chained to the previous one with SHA-256. `/api/verify/<slug>` recomputes the chain.
 - Limit: whoever runs the database could still rebuild the whole chain. To close that gap, publish each community's chain head somewhere you do not control (a daily post, or a public timestamping service). This is not built yet.
 
+## Live setup (free tier)
+
+| Piece | Where |
+| --- | --- |
+| App | Render free web service `callproof`, Frankfurt: https://callproof-l272.onrender.com |
+| Database | Neon project `callproof` (`flat-king-59781755`), AWS Frankfurt |
+| Whop app | `app_ZCXHlhulIFXWBb`, owned by Drift & Compass, hidden from the App Store |
+| Health check | https://callproof-l272.onrender.com/api/health, and a `[startup-check]` line in the Render log on every start |
+
+The free Render service sleeps after 15 minutes without traffic, so a scheduler
+(for example cron-job.org) must call `GET /api/cron/grade` every 15 minutes with
+the header `Authorization: Bearer <CRON_SECRET>`. Grading replays every 1-minute
+candle since the last run, so a 15-minute schedule changes only how fresh the
+page is, not the results.
+
 ## Deploy
 
 1. Create the app in the Whop developer dashboard. Set the dashboard path to `/dashboard/[companyId]` and the experience path to `/experiences/[experienceId]`. Copy the app ID and app API key.
