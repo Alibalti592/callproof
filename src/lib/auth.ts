@@ -25,6 +25,11 @@ export function devAuth() {
 
 export class AuthError extends Error {}
 
+/** Which Whop settings are configured. The app ID is public; the key is never returned. */
+export function authEnvironment() {
+  return { whopAppId: process.env.WHOP_APP_ID ?? null, whopApiKeySet: Boolean(process.env.WHOP_API_KEY) };
+}
+
 export async function currentUserId(): Promise<string> {
   if (devAuth()) return "user_dev";
   const appId = process.env.WHOP_APP_ID;
